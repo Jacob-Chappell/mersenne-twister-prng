@@ -28,7 +28,7 @@ int main(int argc, char ** argv) { // first arg is the number of random numbers,
 
     for (int i = 0; i < rand_count; i ++) {
         rand_out = mt(&mtData); // generate the new random number
-        fprintf(output, "%010u\n", rand_out); // write the random number to the output file
+        fwrite(&rand_out, sizeof(unsigned int), 1, output); // write the random number to the output file
     }
 
     fclose(output);
