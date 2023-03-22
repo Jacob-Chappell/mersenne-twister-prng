@@ -18,7 +18,7 @@
 
 typedef struct {
     unsigned int i;
-    unsigned int[N] mt;
+    unsigned int mt[N];
 } MT_Data;
 
 MT_Data mt_init();

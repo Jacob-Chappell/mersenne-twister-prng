@@ -3,7 +3,7 @@
 //
 
 #include "mt.h"
-#include "math.h"
+#include <stdlib.h>
 
 // seed of srand init of the mt array
 #define SRAND_INIT 1
@@ -14,8 +14,9 @@ MT_Data mt_init() {
     data.i = 0;
 
 #ifdef SRAND_INIT
+    srand(SRAND_INIT);
     for (int i = 0; i < N; i ++) {
-        data.mt[i] = srand(SRAND_INIT);
+        data.mt[i] = rand();
     }
 #endif // SRAND_INIT
 
@@ -30,10 +31,10 @@ unsigned int mt(MT_Data * data) {
     i_m = (data->i + M) % N;
 
     // stage 1
-    y = (data->mt[data->i] & 0xFFFF0000) | (x[i_1] & 0x0000FFFF); // need to replace the constants with ones that reflect R
+    y = (data->mt[data->i] & 0xFFFF0000) | (data->mt[i_1] & 0x0000FFFF); // need to replace the constants with ones that reflect R
 
     // stage 2
-    data->mt[data->i] = data->mt[i_m] ^ (y >> 1) ^ (y[0] ? A : 0);
+    data->mt[data->i] = data->mt[i_m] ^ (y >> 1) ^ ((y & 0x1) ? A : 0);
 
     // stage 3
     y = data->mt[data->i];
