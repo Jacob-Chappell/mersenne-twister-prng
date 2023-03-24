@@ -31,6 +31,14 @@ int main(int argc, char ** argv) { // first arg is the number of random numbers,
         fwrite(&rand_out, sizeof(unsigned int), 1, output); // write the random number to the output file
     }
 
+#ifdef MASK_DEBUG
+    unsigned int u_mask, l_mask;
+    u_mask = 0xFFFFFFFF <<  R;
+    l_mask = 0xFFFFFFFF >> (32 - R);
+    printf("upper mask: %x, lower mask: %x\n", u_mask, l_mask);
+#endif // MASK_DEBUG
+
     fclose(output);
+    printf("Done!\n");
     return EXIT_SUCCESS;
 }

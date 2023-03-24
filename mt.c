@@ -25,13 +25,16 @@ MT_Data mt_init() {
 
 // generate the next random number
 unsigned int mt(MT_Data * data) {
-    unsigned int y, i_1, i_m;
+    unsigned int y, i_1, i_m, u_mask, l_mask;
 
     i_1 = (data->i + 1) % N;
     i_m = (data->i + M) % N;
 
+    u_mask = 0xFFFFFFFF <<  R;
+    l_mask = 0xFFFFFFFF >> (32 - R);
+
     // stage 1
-    y = (data->mt[data->i] & 0xFFFF0000) | (data->mt[i_1] & 0x0000FFFF); // need to replace the constants with ones that reflect R
+    y = (data->mt[data->i] & u_mask) | (data->mt[i_1] & l_mask);
 
     // stage 2
     data->mt[data->i] = data->mt[i_m] ^ (y >> 1) ^ ((y & 0x1) ? A : 0);
