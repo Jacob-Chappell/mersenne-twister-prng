@@ -5,8 +5,7 @@
 #include "mt.h"
 #include <stdlib.h>
 
-// seed of srand init of the mt array
-#define SRAND_INIT 1
+//#define SRAND_INIT 1
 
 // initialize the mt data
 MT_Data mt_init() {
@@ -18,7 +17,7 @@ MT_Data mt_init() {
     for (int i = 0; i < N; i ++) {
         data.mt[i] = rand();
     }
-#endif // SRAND_INIT
+#endif // SRAND_INI
 
     return data;
 }
