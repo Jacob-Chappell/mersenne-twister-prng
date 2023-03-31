@@ -5,6 +5,8 @@ module tb_mersenne_twister();
     parameter INIT_STATE_FILENAME = "./docs/startState.bin"
     parameter OUTPUT_FILENAME     = "./docs/output_hw.bin"
 
+    localparam NUM_GEN = 10; // amount of random numbers to generate
+
     localparam SEEK_START = 0;
     localparam SEEK_CUR   = 1;
     localparam SEEK_END   = 2;
@@ -14,8 +16,8 @@ module tb_mersenne_twister();
     logic tb_n_rst;
     logic tb_load_value;
     logic tb_gen_rv;
-    logic [31:0] tb_value;
-    logic [31:0] tb_rv;
+    logic [W-1:0] tb_value;
+    logic [W-1:0] tb_rv;
 
     // Test bench signals
     integer i; // iterator variable
@@ -24,6 +26,7 @@ module tb_mersenne_twister();
     integer out_file;
     integer quiet_catch;
 
+    localparam W = 32;
     localparam N = 624;
 
     localparam CLK_PERIOD = 10ns;
@@ -62,7 +65,7 @@ module tb_mersenne_twister();
 
     // task for loading a single value into the state
     task send_value;
-        input [31:0] value;
+        input [W-1:0] value;
     begin
         @(negedge tb_clk);
 
@@ -79,12 +82,7 @@ module tb_mersenne_twister();
     begin
         in_file = $fopen(INIT_STATE_FILENAME, "rb");
 
-        for(i = 0; i < N; i = i + 1) begin
-            // not sure how to read in the binary data in any other way. May have to be adjusted to match the c program
-            quiet_catch = $fscanf(in_file, "%c", x[7:0]);
-            quiet_catch = $fscanf(in_file, "%c", x[15:8]);
-            quiet_catch = $fscanf(in_file, "%c", x[23:16]);
-            quiet_catch = $fscanf(in_file, "%c", x[31:24]);
+
 
             send_value(x);
         end
@@ -103,10 +101,7 @@ module tb_mersenne_twister();
         @(negedge tb_clk);
         tb_gen_rv = 1'b0;
 
-        $fwrite(out_file, "%c", x[7:0]);
-        $fwrite(out_file, "%c", x[15:8]);
-        $fwrite(out_file, "%c", x[23:16]);
-        $fwrite(out_file, "%c", x[31:24]);
+
     end
     endtask
 
@@ -125,15 +120,23 @@ module tb_mersenne_twister();
     endtask
 
     // main bench process
-    intial begin
-        logic tb_clk;
-        logic tb_n_rst;
-        logic tb_load_value;
-        logic tb_gen_rv;
-        logic [31:0] tb_value;
-        logic [31:0] tb_rv;
+    initial begin
+        tb_n_rst      = 1'b1;
+        tb_load_value = 1'b0;
+        tb_gen_rv     = 1'b0;
+        tb_value      = '0';
+        tb_rv         = '0';
+
+        // reset DUT
+        reset_dut();
+
+        // load in the state
+        load_state();
+
+        // generate the rvs
+        gen_n_rvs(NUM_GEN);
 
         $stop;
     end
 
-
+endmodule
