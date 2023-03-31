@@ -6,16 +6,22 @@
 #include <stdio.h>
 #include "mt.h"
 
-int main(int argc, char ** argv) { // first arg is the number of random numbers, second is the start state file, and the third is the output file
+int main(int argc, char ** argv) { // first arg is the number of random numbers, second is the start state file, and the third is the output file, fourth is file format (binary "b" or ascii "a")
     FILE* output;
     FILE* input;
     MT_Data mtData;
     int size;
+    int i;
     int rand_count;
     unsigned int rand_out;
 
-    if(argc < 4) {
-        fprintf(stderr, "Incorrect arg count");
+    if(argc < 5) {
+        fprintf(stderr, "Incorrect arg count\n");
+        return EXIT_FAILURE;
+    }
+
+    if((argv[4][0] != 'a') && (argv[4][0] != 'b')) {
+        fprintf(stderr, "Incorrect file format specifier given\n");
         return EXIT_FAILURE;
     }
 
@@ -31,15 +37,23 @@ int main(int argc, char ** argv) { // first arg is the number of random numbers,
     // check the input file length
     fseek(input, 0, SEEK_END);
     size = ftell(input);
-    if(size != (N * sizeof(unsigned int))) {
+    int expectedSize = argv[4][0] == 'a' ? N * (W/4 + 3) : N * sizeof(unsigned int);
+    if(size != expectedSize) {
         fclose(input);
-        fprintf(stderr, "Input file wrong size (instead is %d bytes)\n", size);
+        fprintf(stderr, "Input file wrong size of %d bytes, should be %d bytes\n", size, expectedSize);
         return EXIT_FAILURE;
     }
 
     // read in the start state
     fseek(input, 0, SEEK_SET);
-    fread(mtData.mt, sizeof(unsigned int), N, input);
+
+    if(argv[4][0] == 'b') {
+        fread(mtData.mt, sizeof(unsigned int), N, input);
+    } else {
+        for(i = 0; i < N; i ++) {
+            fscanf(input, "%x\n", mtData.mt + i);
+        }
+    }
     fclose(input);
 
     // generate the numbers
@@ -51,17 +65,14 @@ int main(int argc, char ** argv) { // first arg is the number of random numbers,
 
     sscanf(argv[1], "%d", &rand_count);
 
-    for (int i = 0; i < rand_count; i ++) {
+    for (i = 0; i < rand_count; i ++) {
         rand_out = mt(&mtData); // generate the new random number
-        fwrite(&rand_out, sizeof(unsigned int), 1, output); // write the random number to the output file
+        if(argv[4][0] == 'b') {
+            fwrite(&rand_out, sizeof(unsigned int), 1, output); // write the random number to the output file
+        } else {
+            fprintf(output, "%#010x\n", rand_out);
+        }
     }
-
-#ifdef MASK_DEBUG
-    unsigned int u_mask, l_mask;
-    u_mask = 0xFFFFFFFF <<  R;
-    l_mask = 0xFFFFFFFF >> (32 - R);
-    printf("upper mask: %x, lower mask: %x\n", u_mask, l_mask);
-#endif // MASK_DEBUG
 
     fclose(output);
     printf("Done!\n");

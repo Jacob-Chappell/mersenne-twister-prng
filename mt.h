@@ -5,6 +5,7 @@
 #ifndef MERSENNE_TWISTER_PRNG_H
 #define MERSENNE_TWISTER_PRNG_H
 
+#define W 32
 #define M 397
 #define A 0x9908B0DF
 #define N 624

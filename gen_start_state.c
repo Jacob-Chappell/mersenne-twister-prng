@@ -8,7 +8,7 @@
 #define SRAND_INIT 1
 #define N 624
 
-int main(int argc, char ** argv) { // first arg is the output filename
+int main(int argc, char ** argv) { // first arg is the output filename, second is file format (binary "b" or ascii "a")
     FILE* output;
     unsigned int data;
 
@@ -19,9 +19,21 @@ int main(int argc, char ** argv) { // first arg is the output filename
     }
 
     srand(SRAND_INIT);
-    for (int i = 0; i < N; i ++) {
-        data = rand();
-        fwrite(&data, sizeof(unsigned int), 1, output);
+
+    if(argv[2][0] == 'a') { // ascii format
+        for (int i = 0; i < N; i ++) {
+            data = rand();
+            fprintf(output, "%#010x\n", data);
+        }
+    } else if(argv[2][0] == 'b') { // binary format
+        for (int i = 0; i < N; i ++) {
+            data = rand();
+            fwrite(&data, sizeof(unsigned int), 1, output);
+        }
+    } else {
+        fclose(output);
+        fprintf(stderr, "Incorrect format specifier given ('a' -> ASCII, 'b' -> binary)\n");
+        return EXIT_FAILURE;
     }
 
     fclose(output);
