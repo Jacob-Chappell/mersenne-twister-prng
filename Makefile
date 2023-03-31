@@ -32,3 +32,6 @@ gen_start_ascii: gen_start_state.o clean
 
 clean:
 	rm $(EXEC) | rm *.o | rm $(OUTFILE).* | rm $(STATEFILE).* | rm gen_start
+
+send_verilog:
+	scp -r hardware-implementation/. mg123@ececomp.ecn.purdue.edu:/home/ecegrid/a/mg123/SoCET/mt_hwi
