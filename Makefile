@@ -39,3 +39,6 @@ clean:
 
 send_verilog:
 	scp -r hardware-implementation/. mg123@ececomp.ecn.purdue.edu:/home/ecegrid/a/mg123/SoCET/mt_hwi
+
+get_output:
+	scp mg123@ececomp.ecn.purdue.edu:/home/ecegrid/a/mg123/SoCET/mt_hwi/docs/* hw-outputs/

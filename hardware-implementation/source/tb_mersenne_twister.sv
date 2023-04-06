@@ -2,10 +2,10 @@
 
 module tb_mersenne_twister();
 
-    parameter INIT_STATE_FILENAME = "./docs/startState.bin"
-    parameter OUTPUT_FILENAME     = "./docs/output_hw.bin"
+    localparam INIT_STATE_FILENAME = "./docs/startState.bin";
+    localparam OUTPUT_FILENAME     = "./docs/output_hw.txt";
 
-    localparam NUM_GEN = 10; // amount of random numbers to generate
+    localparam NUM_GEN = 50000; // amount of random numbers to generate
 
     localparam W = 32;
     localparam N = 624;
@@ -35,7 +35,7 @@ module tb_mersenne_twister();
     task reset_dut;
 	begin
 		// Activate the design's reset (does not need to be synchronize with clock)
-		tb_n_reset = 1'b0;
+		tb_n_rst = 1'b0;
 
 		// Wait for a couple clock cycles
 		@(posedge tb_clk);
@@ -43,7 +43,7 @@ module tb_mersenne_twister();
 
 		// Release the reset
 		@(negedge tb_clk);
-		tb_n_reset = 1;
+		tb_n_rst = 1;
 
 		// Wait for a while before activating the design
 		@(posedge tb_clk);
@@ -61,7 +61,7 @@ module tb_mersenne_twister();
 	end
 
 	// DUT portmap
-	mersenne_twister DUT (.clk(tb_clk), .n_rst(tb_n_rst), .load_value(tb_load_value), .gen_rv(tb_gen_rv)
+	mersenne_twister DUT (.clk(tb_clk), .n_rst(tb_n_rst), .load_value(tb_load_value), .gen_rv(tb_gen_rv),
                             .value(tb_value), .rv(tb_rv));
 
     // task for loading a single value into the state
@@ -83,15 +83,15 @@ module tb_mersenne_twister();
     begin
         in_file = $fopen(INIT_STATE_FILENAME, "rb");
 
-        $fread(state, file);
+        $fread(tb_state, in_file);
 
         $fclose(in_file);
 
         // loop through each state value and load it into the design
         // the endianess needs to be swapped due to fread behavior
         for(i = 0; i < N; i ++) begin
-            state[i] = {state[i][7:0], state[i][15:8], state[i][23:16], state[i][31:24]};
-            send_value(state[i]);
+            tb_state[i] = {tb_state[i][7:0], tb_state[i][15:8], tb_state[i][23:16], tb_state[i][31:24]};
+            send_value(tb_state[i]);
         end
     end
     endtask
@@ -111,8 +111,8 @@ module tb_mersenne_twister();
     endtask
 
     // task for generating a specific number of rvs
-    begin gen_n_rvs;
-        integer n;
+    task get_n_rvs;
+        input integer n;
     begin
         out_file = $fopen(OUTPUT_FILENAME, "wb");
 
@@ -130,8 +130,8 @@ module tb_mersenne_twister();
         tb_n_rst      = 1'b1;
         tb_load_value = 1'b0;
         tb_gen_rv     = 1'b0;
-        tb_value      = '0';
-        tb_rv         = '0';
+        tb_value      = '0;
+        tb_rv         = '0;
 
         // reset DUT
         reset_dut();
@@ -140,7 +140,7 @@ module tb_mersenne_twister();
         load_state();
 
         // generate the rvs
-        gen_n_rvs(NUM_GEN);
+        get_n_rvs(NUM_GEN);
 
         $stop;
     end

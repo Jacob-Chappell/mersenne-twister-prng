@@ -20,7 +20,7 @@ module mersenne_twister #(
 );
 
     logic shift_en;
-    logic [W-1:0] x_n, stage2_out, stage2_out, stage3_out;
+    logic [W-1:0] x_n, stage1_out, stage2_out, stage3_out;
 
     logic [W-1:0] state_0, state_1, state_m;
 
@@ -29,24 +29,25 @@ module mersenne_twister #(
     genvar i;
     generate
     for(i = 0; i < W; i++) begin
-        flex_stp_sr IX #(.NUM_BITS(N), .SHIFT_MSB(0)) (.clk(clk), .n_rst(n_rst), .shift_enable(shift_en), .serial_in(x_n[i]), .parallel_out(state[i]));
+        flex_stp_sr #(.NUM_BITS(N), .SHIFT_MSB(0)) IX (.clk(clk), .n_rst(n_rst), .shift_enable(shift_en), .serial_in(x_n[i]), .parallel_out(state[i]));
 
-//        assign state_0[i] = state[i][0];
-//        assign state_1[i] = state[i][1];
-//        assign state_m[i] = state[i][M];
+        assign state_0[i] = state[i][0];
+        assign state_1[i] = state[i][1];
+        assign state_m[i] = state[i][M];
     end
+    endgenerate
 
-    assign state_0 = state[W-1:0][0];
-    assign state_1 = state[W-1:0][1];
-    assign state_m = state[W-1:0][M];
+//    assign state_0 = state[W-1:0][0];
+//    assign state_1 = state[W-1:0][1];
+//    assign state_m = state[W-1:0][M];
 
     //flex_stp_sr STATE[W-1:0] #(.NUM_BITS(N), .SHIFT_MSB(0)) (.clk(clk), .n_rst(n_rst), .shift_enable(shift_en), .serial_in(x_i), .parallel_out(state));
 
     // shift enable logic
-    assign shift_en = load_val | gen_rv;
+    assign shift_en = load_value | gen_rv;
 
     // loading value logic
-    assign x_n = load_i ? load_val : stage2_out;
+    assign x_n = load_value ? value : stage2_out;
 
     // stage 1 and 2
     always_comb begin
@@ -65,8 +66,11 @@ module mersenne_twister #(
 
     // register the output
     always_ff @(posedge clk, negedge n_rst) begin
-        if(n_rst == 1'b0) rv = '0;
-        else              rv = stage3_out;
+        if(n_rst == 1'b0) begin
+            rv <= '0;
+        end else begin
+            rv <= stage3_out;
+        end
     end
 
 endmodule
