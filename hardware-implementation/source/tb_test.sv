@@ -14,9 +14,9 @@ module tb_test();
         state[3] = 32'h00000300;
 
         $fdisplay(file, "0x%8x", state[0]);
-	$fdisplay(file, "0x%8x", state[1]);
-	$fdisplay(file, "0x%8x", state[2]);
-	$fdisplay(file, "0x%8x", state[3]);
+	    $fdisplay(file, "0x%8x", state[1]);
+	    $fdisplay(file, "0x%8x", state[2]);
+	    $fdisplay(file, "0x%8x", state[3]);
 
         $fclose(file);
 

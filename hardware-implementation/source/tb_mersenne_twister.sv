@@ -7,6 +7,9 @@ module tb_mersenne_twister();
 
     localparam NUM_GEN = 10; // amount of random numbers to generate
 
+    localparam W = 32;
+    localparam N = 624;
+
     localparam SEEK_START = 0;
     localparam SEEK_CUR   = 1;
     localparam SEEK_END   = 2;
@@ -18,6 +21,7 @@ module tb_mersenne_twister();
     logic tb_gen_rv;
     logic [W-1:0] tb_value;
     logic [W-1:0] tb_rv;
+    logic [0:N-1] [W-1:0] tb_state;
 
     // Test bench signals
     integer i; // iterator variable
@@ -25,9 +29,6 @@ module tb_mersenne_twister();
     integer in_file;
     integer out_file;
     integer quiet_catch;
-
-    localparam W = 32;
-    localparam N = 624;
 
     localparam CLK_PERIOD = 10ns;
 
@@ -82,12 +83,16 @@ module tb_mersenne_twister();
     begin
         in_file = $fopen(INIT_STATE_FILENAME, "rb");
 
-
-
-            send_value(x);
-        end
+        $fread(state, file);
 
         $fclose(in_file);
+
+        // loop through each state value and load it into the design
+        // the endianess needs to be swapped due to fread behavior
+        for(i = 0; i < N; i ++) begin
+            state[i] = {state[i][7:0], state[i][15:8], state[i][23:16], state[i][31:24]};
+            send_value(state[i]);
+        end
     end
     endtask
 
@@ -113,6 +118,7 @@ module tb_mersenne_twister();
 
         for(i = 0; i < n; i = i + 1) begin
             get_rv();
+            $fdisplay(out_file, "0x%8x", tb_rv);
         end
 
         $fclose(out_file);
