@@ -1,0 +1,188 @@
+Information: Updating design information... (UID-85)
+Warning: Design 'mersenne_twister' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : mersenne_twister
+Version: K-2015.06-SP1
+Date   : Wed Apr 12 14:43:56 2023
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: typical   Library: osu05_stdcells
+Wire Load Model Mode: top
+
+  Startpoint: genblk1[0].IX/parallel_out_reg[1]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: rv_reg[9] (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  genblk1[0].IX/parallel_out_reg[1]/CLK (DFFSR)           0.00 #     0.00 r
+  genblk1[0].IX/parallel_out_reg[1]/Q (DFFSR)             1.07       1.07 f
+  genblk1[0].IX/parallel_out[1] (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_31)
+                                                          0.00       1.07 f
+  U246/Y (INVX2)                                          0.72       1.79 r
+  U241/Y (INVX2)                                          0.60       2.39 f
+  U186/Y (XNOR2X1)                                        0.53       2.91 f
+  U185/Y (XOR2X1)                                         0.48       3.40 f
+  U143/Y (XOR2X1)                                         0.37       3.76 f
+  U123/Y (XOR2X1)                                         0.27       4.03 f
+  U122/Y (XNOR2X1)                                        0.18       4.21 r
+  rv_reg[9]/D (DFFSR)                                     0.00       4.21 r
+  data arrival time                                                  4.21
+
+  clock clk (rise edge)                                   9.00       9.00
+  clock network delay (ideal)                             0.00       9.00
+  rv_reg[9]/CLK (DFFSR)                                   0.00       9.00 r
+  library setup time                                     -0.22       8.78
+  data required time                                                 8.78
+  --------------------------------------------------------------------------
+  data required time                                                 8.78
+  data arrival time                                                 -4.21
+  --------------------------------------------------------------------------
+  slack (MET)                                                        4.57
+
+
+1
+ 
+****************************************
+Report : area
+Design : mersenne_twister
+Version: K-2015.06-SP1
+Date   : Wed Apr 12 14:43:56 2023
+****************************************
+
+Library(s) Used:
+
+    osu05_stdcells (File: /package/eda/cells/OSU/v2.7/synopsys/lib/ami05/osu05_stdcells.db)
+
+Number of ports:                        20164
+Number of nets:                         90726
+Number of cells:                        90530
+Number of combinational cells:          50498
+Number of sequential cells:             40000
+Number of macros/black boxes:               0
+Number of buf/inv:                      30283
+Number of references:                      40
+
+Combinational area:           12251952.000000
+Buf/Inv area:                  4986144.000000
+Noncombinational area:        31680000.000000
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (No wire load specified)
+
+Total cell area:              43931952.000000
+Total area:                 undefined
+1
+Loading db file '/package/eda/cells/OSU/v2.7/synopsys/lib/ami05/osu05_stdcells.db'
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
+Warning: Design has unannotated sequential cell outputs. (PWR-415)
+ 
+****************************************
+Report : power
+        -hier
+        -analysis_effort low
+Design : mersenne_twister
+Version: K-2015.06-SP1
+Date   : Wed Apr 12 14:43:59 2023
+****************************************
+
+
+Library(s) Used:
+
+    osu05_stdcells (File: /package/eda/cells/OSU/v2.7/synopsys/lib/ami05/osu05_stdcells.db)
+
+
+Operating Conditions: typical   Library: osu05_stdcells
+Wire Load Model Mode: top
+
+
+Global Operating Voltage = 5    
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+--------------------------------------------------------------------------------
+                                       Switch   Int      Leak     Total
+Hierarchy                              Power    Power    Power    Power    %
+--------------------------------------------------------------------------------
+mersenne_twister                        313.811 4.70e+03 1.39e+04 5.02e+03 100.0
+  genblk1[31].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_0)
+                                          9.801  146.776  432.786  156.578   3.1
+  genblk1[30].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_1)
+                                          9.768  146.781  432.816  156.549   3.1
+  genblk1[29].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_2)
+                                          9.811  146.787  432.847  156.599   3.1
+  genblk1[28].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_3)
+                                          9.777  146.653  432.847  156.431   3.1
+  genblk1[27].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_4)
+                                          9.736  146.654  432.816  156.390   3.1
+  genblk1[26].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_5)
+                                          9.813  146.793  432.847  156.606   3.1
+  genblk1[25].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_6)
+                                          9.810  146.782  432.847  156.593   3.1
+  genblk1[24].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_7)
+                                          9.735  146.652  432.816  156.388   3.1
+  genblk1[23].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_8)
+                                          9.812  146.789  432.847  156.602   3.1
+  genblk1[22].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_9)
+                                          9.815  146.800  432.847  156.615   3.1
+  genblk1[21].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_10)
+                                          9.763  146.763  432.816  156.526   3.1
+  genblk1[20].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_11)
+                                          9.812  146.788  432.847  156.601   3.1
+  genblk1[19].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_12)
+                                          9.779  146.657  432.847  156.436   3.1
+  genblk1[18].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_13)
+                                          9.767  146.781  432.816  156.548   3.1
+  genblk1[17].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_14)
+                                          9.812  146.788  432.847  156.600   3.1
+  genblk1[16].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_15)
+                                          9.812  146.789  432.847  156.601   3.1
+  genblk1[15].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_16)
+                                          9.733  146.642  432.816  156.375   3.1
+  genblk1[14].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_17)
+                                          9.810  146.782  432.847  156.592   3.1
+  genblk1[13].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_18)
+                                          9.779  146.658  432.847  156.437   3.1
+  genblk1[12].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_19)
+                                          9.734  146.649  432.816  156.384   3.1
+  genblk1[11].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_20)
+                                          9.811  146.786  432.847  156.597   3.1
+  genblk1[10].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_21)
+                                          9.813  146.794  432.847  156.608   3.1
+  genblk1[9].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_22)
+                                          9.769  146.785  432.816  156.554   3.1
+  genblk1[8].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_23)
+                                          9.814  146.799  432.847  156.614   3.1
+  genblk1[7].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_24)
+                                          9.775  146.643  432.847  156.419   3.1
+  genblk1[6].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_25)
+                                          9.732  146.640  432.816  156.373   3.1
+  genblk1[5].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_26)
+                                          9.811  146.786  432.847  156.597   3.1
+  genblk1[4].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_27)
+                                          9.779  146.660  432.847  156.439   3.1
+  genblk1[3].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_28)
+                                          9.736  146.657  432.816  156.393   3.1
+  genblk1[2].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_29)
+                                          9.776  146.650  432.847  156.427   3.1
+  genblk1[1].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_30)
+                                          9.777  146.652  432.847  156.429   3.1
+  genblk1[0].IX (flex_stp_sr_NUM_BITS624_SHIFT_MSB0_31)
+                                          9.708  146.618  432.643  156.326   3.1
+1

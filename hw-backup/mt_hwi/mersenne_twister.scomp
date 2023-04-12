@@ -1,0 +1,9 @@
+QuestaSim vlog 10.7a Compiler 2018.03 Mar 26 2018
+Start time: 13:04:22 on Apr 10,2023
+vlog -sv -work source_work source/mersenne_twister.sv 
+-- Compiling module mersenne_twister
+
+Top level modules:
+	mersenne_twister
+End time: 13:04:22 on Apr 10,2023, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
