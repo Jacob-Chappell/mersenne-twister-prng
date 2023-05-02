@@ -1,0 +1,61 @@
+CAPI=2:
+name: socet:aft:mt_prng:1.0.0
+description: Hardware implementation of the mersenne twister algorithm
+
+filesets:
+    rtl:
+        depend:
+            - "socet:bus-components:bus_protocol_if"
+        files:
+            - hardware-implementation/source/flex_stp_sr.sv
+            - hardware-implementation/source/mersenne_twister.sv
+            - hardware-implementation/source/mt_wrapper.sv
+        file_type: systemVerilogSource
+
+targets:
+    default: &default
+        filesets:
+            - rtl
+        toplevel: mt_wrapper
+
+    sim:
+        <<: *default
+        description: Simulate w/TB
+        default_tool: verilator
+        filesets_append:
+            - "!tool_verilator? (tb)"
+            - "tool_verilator? (verilator_tb)"
+        toplevel:
+            - "tool_verilator? (gpio_wrapper)"
+            - "!tool_verilator? (tb_gpio)"
+        tools:
+            xcelium:
+                xrun_options:
+                    - +xmtimescale+1ns/100ps
+            modelsim:
+                vsim_options:
+                    - -vopt
+                    - -voptargs='+acc'
+                    - -t ps
+            vcs:
+                vcs_options:
+                    - -assert svaext
+            verilator:
+                verilator_options:
+                    - --trace
+                    - --trace-fst
+                    - --trace-structs
+
+    fpga:
+        <<: *default
+        description: Synthesize for FPGA
+        default_tool: quartus
+        toplevel:
+            - mt_wrapper
+        parameters:
+            - NUM_PINS=8
+            - SYNTHESIS=true
+        tools:
+            quartus:
+                family: Cyclone IV E
+                device: EP4CE115F29C7
