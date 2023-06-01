@@ -18,6 +18,7 @@ module mt_wrapper (
     assign write_en = busif.wen & (busif.addr[3:0] == 4'h4);
 
     // error logic
-    assign busif.error = (!read_en & busif.ren) | (!write_en & busif.wen) | !(&busif.strobe);
+    //assign busif.error = (!read_en & busif.ren) | (!write_en & busif.wen) | !(&busif.strobe);
+    assign busif.error = (!read_en & busif.ren) | (!write_en & busif.wen);
 
 endmodule
