@@ -28,7 +28,7 @@ module mersenne_twister #(
 
     genvar i;
     generate
-    for(i = 0; i < W; i++) begin
+    for(i = 0; i < W; i++) begin : g_shift_registers
         flex_stp_sr #(.NUM_BITS(N), .SHIFT_MSB(0)) IX (.clk(clk), .n_rst(n_rst), .shift_enable(shift_en), .serial_in(x_n[i]), .parallel_out(state[i]));
 
         assign state_0[i] = state[i][0];
